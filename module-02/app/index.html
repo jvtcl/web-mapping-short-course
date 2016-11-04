@@ -19,7 +19,7 @@
             font-family: "Noto Sans", sans-serif;
             color: #3d3d3d;
         }
-        
+
         h1 {
             position: absolute;
             margin-top: 0;
@@ -34,7 +34,7 @@
             border-radius: 3px;
             z-index: 800;
         }
-        
+
         h2 {
             font-family: "Lora", serif;
             letter-spacing: .04em;
@@ -48,14 +48,14 @@
             text-align: center;
             margin: 0;
         }
-        
+
         #map {
             position: absolute;
             top: 0;
             bottom: 0;
             width: 100%;
         }
-        
+
         #side-panel {
             position: absolute;
             bottom: 0;
@@ -68,28 +68,28 @@
             border-radius: 3px;
             z-index: 800;
         }
-        
+
         p {
             font-size: .9em;
             line-height: 1.5em;
         }
-        
+
         a {
             color: #005daa;
             text-decoration: none;
         }
-        
+
         a:hover {
             text-decoration: underline;
         }
 
-  
+
     </style>
 </head>
 
 <body>
 
-    <h1>Map Title</h1>
+    <h1>CO2 Emissions by Facility: Colorado</h1>
 
     <div id='map'></div>
 
@@ -116,7 +116,7 @@
         }
 
         var map = L.map('map', options);
-        
+
         L.control.zoom({ position: 'topright'}).addTo(map);
 
         var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -126,7 +126,7 @@
         }).addTo(map);
 
 
-        $.getJSON('data/data.json', function (data) {
+        $.getJSON('data/map.json', function (data) {
 
             console.log(data);
 
@@ -135,7 +135,7 @@
         });
 
         function drawMap(data) {
-            
+
             var options = {
 
                 pointToLayer: pointToLayer,
@@ -144,22 +144,22 @@
 
             }
 
-            L.geoJson(data).addTo(map);
-            
-//            L.geoJson(data, options).addTo(map);
-            
+//            L.geoJson(data).addTo(map);
+
+            L.geoJson(data, options).addTo(map);
+
 //            drawLegend(data)
-            
+
         } // end drawMap
 
 
         function pointToLayer(feature, latlng) {
-            
-//                console.log(feature.properties);
+
+//                console.log(feature.properties["GHG_QUANTITY"]);
 
             return L.circleMarker(latlng, {
 
-                radius: 10
+                radius: calcRadius(feature.properties["GHG_QUANTITY"])
 
             });
 
@@ -168,10 +168,10 @@
         function style(feature) {
 
             var styleOptions = {
-                
-                fillColor: '#bd4932',
+
+                fillColor: 'rgba(83, 39, 144, 0.58)',
                 fillOpacity: 1,
-                color: "whitesmoke",
+                color: "rgba(245, 245, 245, 0.48)",
                 weight: 1
 
             }
@@ -180,39 +180,52 @@
 
         } // end style
 
-        function onEachFeature(feature, layer) {
+         function onEachFeature(feature, layer) {
 
             layer.on({
                 mouseover: function () {
-                    
-//                    console.log(feature.properties);
-                    
+
+                    layer.setStyle({
+                        color: "yellow",
+                        weight: 3
+                    });
+
                 },
                 mouseout: function () {
 
-                    
+                    layer.setStyle({
+                        color: "#105b63",
+                        weight: 1
+                    });
                 }
-            })  
+            });
 
-        } // end onEachFeature
+
+            var toolTipInfo = "Name: " + feature.properties["FACILITY NAME"] + "<br>" +
+                "C02: " + feature.properties.GHG_QUANTITY.toLocaleString() + "metric tons"
+
+
+            layer.bindTooltip(toolTipInfo, { sticky: true });
+
+        }
 
         function calcRadius(val) {
 
             var radius = Math.sqrt(val / Math.PI),
                 scaleFactor = .04;
-            
+
             return radius * scaleFactor;
 
         } // end calcRadius
-        
+
         function drawLegend(data) {
-            
-            
-                    
+
+
+
         } // end drawLegend
-        
-        
-        
+
+
+
     </script>
 
 </body>

@@ -19,7 +19,7 @@
 			font-family: "Noto Sans", sans-serif;
 			color: #3d3d3d;
 		}
-		
+
 		h1 {
 			position: absolute;
 			margin-top: 0;
@@ -34,19 +34,19 @@
 			border-radius: 3px;
 			z-index: 800;
 		}
-		
+
 		h2 {
 			font-family: "Lora", serif;
 			letter-spacing: .04em;
 		}
-		
+
 		#map {
 			position: absolute;
 			top: 0;
 			bottom: 0;
 			width: 100%;
 		}
-		
+
 		section {
 			position: absolute;
 			bottom: 0;
@@ -59,17 +59,17 @@
 			border-radius: 3px;
 			z-index: 800;
 		}
-		
+
 		p {
 			font-size: .9em;
 			line-height: 1.5em;
 		}
-		
+
 		a {
 			color: #005daa;
 			text-decoration: none;
 		}
-		
+
 		a:hover {
 			text-decoration: underline;
 		}
@@ -78,7 +78,7 @@
 
 <body>
 
-	<h1>This is the title to my awesome map.</h1>
+	<h1>This is the title to my awesome map!!</h1>
 
 	<div id='map'></div>
 
@@ -97,24 +97,37 @@
 	<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
 	<script>
-		
+
+	console.log("hello world")
+
 		var options = {
 			center: [40.00816, -105.27423],
 			zoom: 12
 		}
+
 		var map = L.map('map', options);
-		
-		var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+
+		// var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+		// 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+		// 	subdomains: 'abcd',
+		// 	maxZoom: 19
+		// }).addTo(map);
+
+		var tiles = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.{ext}', {
+			attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 			subdomains: 'abcd',
-			maxZoom: 19
+			minZoom: 0,
+			maxZoom: 20,
+			ext: 'png'
 		}).addTo(map);
+
 		var message = 'Guggenheim Geography!';
+
 		L.marker(map.getCenter())
 			.bindTooltip(message)
 			.addTo(map)
 			.openTooltip();
-		
+
 	</script>
 
 </body>
